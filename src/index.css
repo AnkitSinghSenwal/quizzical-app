@@ -1,0 +1,17 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(#f4ebeb, #78f3cc);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'poppins', sans-serif;
+  /* overflow: hidden; */
+}
