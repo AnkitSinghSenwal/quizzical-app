@@ -1,18 +1,18 @@
-import './Quiz.css'
-import Confetti from 'react-confetti'
-import { useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
-import { decode } from 'he'
+import './Quiz.css';
+import Confetti from 'react-confetti';
+import { useEffect, useState } from 'react';
+import { nanoid } from 'nanoid';
+import { decode } from 'he';
+import PropTypes from 'prop-types';
 
-function Quiz() {
+function Quiz({apiUrl, resetQuiz}) {
     const [quiz, setQuiz] = useState([]);
     const [score, setScore] = useState(0);
     const [allMarked, setAllMarked] = useState(false);
     const [loading, setLoading] = useState(true);
     const [showScore, setShowScore] = useState(false); // To manage score display
     const [buttonText, setButtonText] = useState('Check answers'); // To manage button
-    const [restart, setRestart] = useState(0)
-    const url = 'https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple';
+    const [restart, setRestart] = useState(0);
     
     // This will load the questions into our state object
     useEffect(() => {
@@ -20,7 +20,7 @@ function Quiz() {
             try {
                 // const startTime = Date.now(); // Record the start time
 
-                const response = await fetch(url);
+                const response = await fetch(apiUrl);
                 const data = await response.json();
 
                 const quizData = data.results.map(question => ({
@@ -49,7 +49,7 @@ function Quiz() {
             }
         };
         fetchData();
-    }, [restart]);
+    }, [restart, apiUrl]);
 
     useEffect(() => {
         function checkAllMarked() {
@@ -122,6 +122,10 @@ function Quiz() {
 
         // window.location.reload(); // Reloads the page
     }
+
+    // function gotoHome(){
+    //     resetQuiz();
+    // }
 
     // This element will get rendered in quiz
     const questionPaper = quiz.map((question, index) => {
@@ -205,8 +209,9 @@ function Quiz() {
         <div className='quiz-page'>
 
             { (score === (quiz.length)) &&  <Confetti/>}
-            { (score === (quiz.length -1)) &&  <Confetti/>}
-            
+            { (score === (quiz.length -1)) &&  <Confetti/>}            
+            { (score === (quiz.length -2)) &&  <Confetti/>}
+
             {questionPaper}
             <div className='quiz-footer'>
 
@@ -217,10 +222,24 @@ function Quiz() {
                     >
                         {buttonText}
                 </button>
+                
+                {showScore && 
+                <button 
+                    className='quiz-button'
+                    // onClick={gotoHome}
+                    onClick={resetQuiz} 
+                >
+                {`Reset Quiz`}    
+                </button>}
 
             </div>
         </div>
     );
+}
+
+Quiz.propTypes = {
+    apiUrl: PropTypes.string,
+    resetQuiz: PropTypes.func,
 }
 
 export default Quiz;
